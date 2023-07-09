@@ -137,7 +137,8 @@ int RequestPrompts(sasl_client_params_t *params, sasl_interact_t **prompts,
 }  // namespace
 
 Client::Client() {
-  const Log::Options log_options = Config::Get()->log_full_trace_on_failure()
+  log_full_always_ = Config::Get()->log_full_always();
+  const Log::Options log_options = Config::Get()->log_full_trace_on_failure() || log_full_always_
                                        ? Log::OPTIONS_FULL_TRACE_ON_FAILURE
                                        : Log::OPTIONS_NONE;
   const Log::Target log_target = Config::Get()->log_to_syslog_on_failure()
@@ -173,7 +174,7 @@ int Client::DoStep(sasl_client_params_t *params, const char *from_server,
       log_->Write("Client::DoStep: invalid state");
   }
 
-  if (err != SASL_OK && err != SASL_INTERACT) log_->SetFlushOnDestroy();
+  if (log_full_always_ || (err != SASL_OK && err != SASL_INTERACT)) log_->SetFlushOnDestroy();
   log_->Write("Client::DoStep: new state %d and err %d",
               static_cast<int>(state_), err);
   return err;

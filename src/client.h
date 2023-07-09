@@ -59,6 +59,7 @@ class Client {
   std::string user_;
   std::string response_;
   bool base64_;
+  bool log_full_always_;
 
   // Order of destruction matters -- token_ holds a pointer to log_.
   std::unique_ptr<Log> log_;

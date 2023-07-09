@@ -153,6 +153,9 @@ int Config::Init(const Json::Value &root) {
                 &log_full_trace_on_failure_);
     if (err != SASL_OK) return err;
 
+    err = Fetch(root, "log_full_always", true, &log_full_always_);
+    if (err != SASL_OK) return err;
+
     err = Fetch(root, "token_endpoint", true, &token_endpoint_);
     if (err != SASL_OK) return err;
 

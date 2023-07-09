@@ -42,6 +42,10 @@ The top-level JSON object can contain the following keys:
 
 : log a full trace to syslog if XOAUTH2 flow fails; may contain tokens/secrets (defaults to "no")
 
+`log_full_always`
+
+: log a full trace to syslog no matter what; may contain tokens/secrets (defaults to "no")
+
 `token_endpoint`
 
 : URL to use when requesting tokens; defaults to Google, must be overridden for use with Microsoft/Outlook.
