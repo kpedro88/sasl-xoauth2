@@ -58,6 +58,10 @@ The top-level JSON object can contain the following keys:
 
 : if set, overrides CURL's default certificate-authority directory
 
+`base64`
+
+: controls base64 encoding of token (required by Outlook) (defaults to "no")
+
 # TOKEN FILE
 
 In addition to this file, `sasl-xoauth2` relies on a "token file" which it updates independently.

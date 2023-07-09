@@ -40,6 +40,7 @@ class Config {
   std::string proxy() const { return proxy_; }
   std::string ca_bundle_file() const { return ca_bundle_file_; }
   std::string ca_certs_dir() const { return ca_certs_dir_; }
+  bool base64() const { return base64_; }
 
  private:
   Config() = default;
@@ -54,6 +55,7 @@ class Config {
   std::string proxy_ = "";
   std::string ca_bundle_file_ = "";
   std::string ca_certs_dir_ = "";
+  bool base64_ = false;
 };
 
 }  // namespace sasl_xoauth2

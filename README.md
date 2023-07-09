@@ -305,13 +305,14 @@ for the application you registered with Azure) in `/etc/sasl-xoauth2.conf`.
 Leave `client_secret` blank (but see [A Note on Client
 Secrets](#a-note-on-client-secrets) below for non-personal-Outlook-account
 situations). Additionally, explicitly set the token endpoint (`sasl-xoauth2`
-points to Gmail's token endpoint by default):
+points to Gmail's token endpoint by default) and enable base64 encoding ([required](https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth#sasl-xoauth2) for Outlook):
 
 ```json
 {
   "client_id": "client ID goes here",
   "client_secret": "",
-  "token_endpoint": "https://login.microsoftonline.com/consumers/oauth2/v2.0/token"
+  "token_endpoint": "https://login.microsoftonline.com/consumers/oauth2/v2.0/token",
+  "base64": "yes"
 }
 ```
 

@@ -58,6 +58,7 @@ class Client {
   State state_ = State::kInitial;
   std::string user_;
   std::string response_;
+  bool base64_;
 
   // Order of destruction matters -- token_ holds a pointer to log_.
   std::unique_ptr<Log> log_;
