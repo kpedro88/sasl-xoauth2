@@ -200,6 +200,7 @@ int Client::InitialStep(sasl_client_params_t *params,
     int err = TriggerPasswordCallback(log_.get(), params->utils, &password);
     log_->Write("Client::InitialStep: TriggerPasswordCallback err=%d", err);
   }
+  log_->Write("Client::InitialStep: auth_name=%s", auth_name.c_str());
 
   if (prompt_need && *prompt_need) {
     params->utils->free(*prompt_need);
@@ -215,6 +216,7 @@ int Client::InitialStep(sasl_client_params_t *params,
                                auth_name.size(),
                                SASL_CU_AUTHID | SASL_CU_AUTHZID, out_params);
   if (err != SASL_OK) return err;
+  log_->Write("Client::InitialStep: canon_user auth_name=%s", auth_name.c_str());
 
   user_ = auth_name;
   token_ = TokenStore::Create(log_.get(), password);
