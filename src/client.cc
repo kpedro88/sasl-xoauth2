@@ -273,8 +273,11 @@ int Client::SendToken(const char **to_server, unsigned int *to_server_len) {
   if (err != SASL_OK) return err;
 
   response_ = "user=" + user_ + "\1auth=Bearer " + token + "\1\1";
-  if (base64_) response_ = base64_encode(response_);
   log_->Write("Client::SendToken: response: %s", response_.c_str());
+  if (base64_) {
+    response_ = base64_encode(response_);
+    log_->Write("Client::SendToken: response encoded: %s", response_.c_str());
+  }
 
   *to_server = response_.data();
   *to_server_len = response_.size();
