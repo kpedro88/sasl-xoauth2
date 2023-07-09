@@ -147,6 +147,7 @@ Client::Client() {
   log_ = Log::Create(log_options, log_target);
   log_->Write("Client: created");
   base64_ = Config::Get()->base64();
+  user_ = Config::Get()->user();
 }
 
 Client::~Client() { log_->Write("Client: destroyed"); }
@@ -218,7 +219,7 @@ int Client::InitialStep(sasl_client_params_t *params,
   if (err != SASL_OK) return err;
   log_->Write("Client::InitialStep: canon_user auth_name=%s", auth_name.c_str());
 
-  user_ = auth_name;
+  if(user_.empty()) user_ = auth_name;
   token_ = TokenStore::Create(log_.get(), password);
   if (!token_) return SASL_FAIL;
 

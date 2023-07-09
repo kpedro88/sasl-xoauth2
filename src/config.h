@@ -42,6 +42,7 @@ class Config {
   std::string ca_bundle_file() const { return ca_bundle_file_; }
   std::string ca_certs_dir() const { return ca_certs_dir_; }
   bool base64() const { return base64_; }
+  std::string user() const { return user_; }
 
  private:
   Config() = default;
@@ -58,6 +59,7 @@ class Config {
   std::string ca_bundle_file_ = "";
   std::string ca_certs_dir_ = "";
   bool base64_ = false;
+  std::string user_ = "";
 };
 
 }  // namespace sasl_xoauth2
