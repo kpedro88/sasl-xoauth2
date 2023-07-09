@@ -169,6 +169,9 @@ int Config::Init(const Json::Value &root) {
     err = Fetch(root, "ca_certs_dir", true, &ca_certs_dir_);
     if (err != SASL_OK) return err;
 
+    err = Fetch(root, "user", true, &user_);
+    if (err != SASL_OK) return err;
+
     return 0;
 
   } catch (const std::exception &e) {

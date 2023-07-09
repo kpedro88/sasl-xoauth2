@@ -152,6 +152,7 @@ Log::Target GetLogTarget() {
 Client::Client() {
   log_ = Log::Create(GetLogOptions(), GetLogTarget());
   log_->Write("Client: created");
+  user_ = Config::Get()->user();
 }
 
 Client::~Client() { log_->Write("Client: destroyed"); }
@@ -221,7 +222,7 @@ int Client::InitialStep(sasl_client_params_t *params,
                                SASL_CU_AUTHID | SASL_CU_AUTHZID, out_params);
   if (err != SASL_OK) return err;
 
-  user_ = auth_name;
+  if(user_.empty()) user_ = auth_name;
   token_ = TokenStore::Create(log_.get(), password);
   if (!token_) return SASL_FAIL;
 
