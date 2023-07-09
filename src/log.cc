@@ -17,9 +17,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
-#include <sys/time.h>
 #include <syslog.h>
-#include <time.h>
 
 #include "config.h"
 
@@ -43,28 +41,6 @@ std::unique_ptr<Log> Log::Create(Options options, Target target) {
 
 Log::~Log() {
   if (options_ & OPTIONS_FLUSH_ON_DESTROY && !lines_.empty()) Flush();
-}
-
-void Log::Write(const char *fmt, ...) {
-  time_t t = time(nullptr);
-  char time_str[32];
-  tm local_time = {};
-  localtime_r(&t, &local_time);
-  strftime(time_str, sizeof(time_str), "%F %T", &local_time);
-
-  char buf[1024];
-  va_list args;
-  va_start(args, fmt);
-  vsnprintf(buf, sizeof(buf), fmt, args);
-  va_end(args);
-  lines_.push_back(std::string(time_str) + ": " + buf);
-
-  if (options_ & OPTIONS_IMMEDIATE && target_ == TARGET_STDERR) {
-    va_start(args, fmt);
-    vfprintf(stderr, fmt, args);
-    fprintf(stderr, "\n");
-    va_end(args);
-  }
 }
 
 void Log::Flush() {

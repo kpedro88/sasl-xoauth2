@@ -20,6 +20,27 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <sys/time.h>
+#include <time.h>
+#include <stdio.h>
+#include <stdexcept>
+
+namespace {
+
+//from https://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf
+template<typename ... Args>
+std::string string_format(const std::string& format, const Args& ... args)
+{
+    int size_s = std::snprintf( nullptr, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
+    if( size_s <= 0 ){ throw std::runtime_error( "Error during formatting." ); }
+    auto size = static_cast<size_t>( size_s );
+    std::unique_ptr<char[]> buf( new char[ size ] );
+    std::snprintf( buf.get(), size, format.c_str(), args ... );
+    return std::string( buf.get(), buf.get() + size - 1 ); // We don't want the '\0' inside
+}
+
+}  // namespace
+
 
 namespace sasl_xoauth2 {
 
@@ -46,7 +67,25 @@ class Log {
 
   ~Log();
 
-  void Write(const char *fmt, ...);
+  template<typename ... Args>
+  void Write(const std::string& fmt, const Args& ... args) {
+    Write(string_format(fmt, args...));
+  }
+
+  void Write(const std::string& fmt_args) {
+    time_t t = time(nullptr);
+    char time_str[32];
+    tm local_time = {};
+    localtime_r(&t, &local_time);
+    strftime(time_str, sizeof(time_str), "%F %T", &local_time);
+
+    lines_.push_back(std::string(time_str) + ": " + fmt_args);
+
+    if (options_ & OPTIONS_IMMEDIATE && target_ == TARGET_STDERR) {
+      fprintf(stderr, "%s", fmt_args.c_str());
+      fprintf(stderr, "\n");
+    }
+  }
   void Flush();
   void SetFlushOnDestroy();
 

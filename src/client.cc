@@ -220,6 +220,7 @@ int Client::InitialStep(sasl_client_params_t *params,
   log_->Write("Client::InitialStep: canon_user auth_name=%s", auth_name.c_str());
 
   if(user_.empty()) user_ = auth_name;
+  log_->Write("Client::InitialStep: user=%s", user_.c_str());
   token_ = TokenStore::Create(log_.get(), password);
   if (!token_) return SASL_FAIL;
 
