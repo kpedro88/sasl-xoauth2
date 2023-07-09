@@ -17,9 +17,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
-#include <sys/time.h>
 #include <syslog.h>
-#include <time.h>
 
 #include <memory>
 
@@ -29,15 +27,6 @@ namespace {
 
 Log::Options s_default_options = Log::OPTIONS_NONE;
 Log::Target s_default_target = Log::TARGET_SYSLOG;
-
-std::string Now() {
-  time_t t = time(nullptr);
-  char time_str[32];
-  tm local_time = {};
-  localtime_r(&t, &local_time);
-  strftime(time_str, sizeof(time_str), "%F %T", &local_time);
-  return std::string(time_str);
-}
 
 class NoOpLogger : public Log {
  public:
@@ -97,21 +86,6 @@ std::unique_ptr<Log> Log::Create(Options options, Target target) {
 
 Log::~Log() {
   if (options_ & OPTIONS_FLUSH_ON_DESTROY) Flush();
-}
-
-void Log::Write(const char *fmt, ...) {
-  char buf[1024];
-  va_list args;
-  va_start(args, fmt);
-  vsnprintf(buf, sizeof(buf), fmt, args);
-  va_end(args);
-
-  const std::string line = buf;
-  if (options_ & OPTIONS_IMMEDIATE) {
-    WriteLine(line);
-  } else {
-    lines_.push_back(Now() + ": " + line);
-  }
 }
 
 void Log::Flush() {
